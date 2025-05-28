@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Logowanie - Znajdź lekarza{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[60vh]">
+    <div class="bg-white shadow-lg rounded-xl px-8 py-10 w-full max-w-md">
+        <h2 class="text-2xl font-bold text-indigo-700 mb-6 text-center">Logowanie</h2>
+
+        <!-- Wiadomości flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                <div class="px-4 py-2 rounded border-l-4 
+                    {% if category == 'success' %}
+                        bg-green-50 border-green-400 text-green-800
+                    {% elif category == 'error' or category == 'danger' %}
+                        bg-red-50 border-red-400 text-red-800
+                    {% else %}
+                        bg-gray-50 border-gray-300 text-gray-700
+                    {% endif %}
+                    mb-2 animate-fade-in">
+                    {{ message|safe }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Formularz logowania -->
+        <form action="/login" method="POST" class="space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Adres e-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Podaj swój adres e-mail"
+                    required
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition"
+                >
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Hasło</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Wprowadź hasło"
+                    required
+                    class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition"
+                >
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg font-semibold shadow transition">
+                Zaloguj się
+            </button>
+        </form>
+
+        <!-- Lub logowanie przez Google -->
+        <div class="my-6 flex items-center justify-center">
+            <div class="border-t w-full"></div>
+            <span class="mx-3 text-gray-400">lub</span>
+            <div class="border-t w-full"></div>
+        </div>
+        <div class="flex flex-col items-center">
+            <a href="{{ url_for('google.login') }}" class="w-full flex items-center justify-center bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow transition">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="" class="w-5 h-5 mr-2"> Zaloguj się przez Google
+            </a>
+        </div>
+
+        <div class="mt-6 flex flex-col items-center space-y-2 text-sm">
+            <p>Nie masz konta?
+                <a href="/register" class="text-indigo-600 hover:underline font-medium">Zarejestruj się</a>
+            </p>
+            <p>
+                <a href="/forgot-password" class="text-indigo-600 hover:underline font-medium">Zapomniałeś hasła?</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

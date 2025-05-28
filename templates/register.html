@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Rejestracja - Znajdź lekarza{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[60vh]">
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-xl px-8 py-10">
+        <h2 class="text-2xl font-bold text-indigo-700 mb-6 text-center">Rejestracja</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                <div class="px-4 py-2 rounded border-l-4
+                    {% if category == 'success' %}
+                        bg-green-50 border-green-400 text-green-800
+                    {% elif category == 'error' or category == 'danger' %}
+                        bg-red-50 border-red-400 text-red-800
+                    {% else %}
+                        bg-gray-50 border-gray-300 text-gray-700
+                    {% endif %}
+                    mb-2 animate-fade-in">
+                    {{ message|safe }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        <form id="registerForm" action="/register" method="POST" novalidate>
+            <!-- Krok 1 -->
+            <div class="step" data-step="0">
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Adres e-mail</label>
+                    <input type="email" id="email" name="email" required
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition" />
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Hasło</label>
+                    <input type="password" id="password" name="password" required minlength="8"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-=\[\]{};':&quot;\\|,.<>\/?]).+$"
+                        title="Hasło musi zawierać co najmniej 8 znaków, w tym dużą i małą literę, cyfrę oraz znak specjalny."
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition" />
+                    <div class="mt-2 text-sm text-gray-600">
+                        Hasło musi zawierać: min. 8 znaków, dużą i małą literę, cyfrę, znak specjalny.
+                    </div>
+                    <div class="h-2 mt-2 rounded-full bg-gray-200 overflow-hidden">
+                        <div id="strengthBar" class="h-full w-0 bg-red-400 transition-all duration-300"></div>
+                    </div>
+                    <p id="strengthText" class="text-sm mt-1 text-gray-700 font-medium"></p>
+                </div>
+
+                <div class="mb-6">
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Potwierdź hasło</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" required
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition" />
+                </div>
+
+                <button type="button" onclick="nextStep(0)"
+                    class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg font-semibold shadow transition">
+                    Dalej
+                </button>
+            </div>
+
+            <!-- Krok 2 -->
+            <div class="step" data-step="1" style="display: none;">
+                <div class="mb-4">
+                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">Imię</label>
+                    <input type="text" id="first_name" name="first_name" required
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition" />
+                </div>
+                <div class="mb-4">
+                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Nazwisko</label>
+                    <input type="text" id="last_name" name="last_name" required
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition" />
+                </div>
+                <div class="mb-6">
+                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Płeć</label>
+                    <select id="gender" name="gender" required
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition">
+                        <option value="">Wybierz...</option>
+                        <option value="M">Mężczyzna</option>
+                        <option value="F">Kobieta</option>
+                        <option value="Other">Inna</option>
+                    </select>
+                </div>
+                <button type="button" onclick="nextStep(1)"
+                    class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg font-semibold shadow transition">
+                    Dalej
+                </button>
+            </div>
+
+            <!-- Krok 3 -->
+            <div class="step" data-step="2" style="display: none;">
+                <div class="mb-6">
+                    <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-1">Data urodzenia</label>
+                    <input type="date" id="birth_date" name="birth_date" required max="{{ max_birth_date }}"
+                        class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition" />
+                </div>
+                <button type="submit"
+                    class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg font-semibold shadow transition">
+                    Zarejestruj się
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 text-center text-sm">
+            <p>Masz już konto?
+                <a href="/login" class="text-indigo-600 hover:underline font-medium">Zaloguj się</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showStep(step) {
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((s, index) => {
+            s.style.display = index === step ? 'block' : 'none';
+        });
+    }
+
+    function nextStep(currentStep) {
+        if (validateStep(currentStep)) {
+            showStep(currentStep + 1);
+        }
+    }
+
+    function validateStep(step) {
+        const inputs = document.querySelectorAll(`.step[data-step="${step}"] input, .step[data-step="${step}"] select`);
+        for (const input of inputs) {
+            if (!input.checkValidity()) {
+                alert(`Pole "${input.name}" jest nieprawidłowe lub wymagane.`);
+                input.focus();
+                return false;
+            }
+        }
+
+        if (step === 0) {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('password_confirmation').value;
+            if (password !== confirm) {
+                alert('Hasła nie są zgodne!');
+                return false;
+            }
+        }
+
+        if (step === 2) {
+            const birthDate = document.getElementById('birth_date').value;
+            if (!validateBirthDate(birthDate)) {
+                alert("Musisz mieć ukończone 18 lat, aby się zarejestrować.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function validateBirthDate(dateString) {
+        const today = new Date();
+        const birthDate = new Date(dateString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age >= 18;
+    }
+
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/\d/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        if (strength <= 2) {
+            strengthBar.style.width = "33%";
+            strengthBar.className = "h-full bg-red-400";
+            strengthText.innerText = "Słabe hasło";
+        } else if (strength <= 4) {
+            strengthBar.style.width = "66%";
+            strengthBar.className = "h-full bg-yellow-400";
+            strengthText.innerText = "Średnie hasło";
+        } else {
+            strengthBar.style.width = "100%";
+            strengthBar.className = "h-full bg-green-500";
+            strengthText.innerText = "Silne hasło";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        showStep(0);
+        document.getElementById('password').addEventListener('input', e => {
+            checkPasswordStrength(e.target.value);
+        });
+    });
+</script>
+{% endblock %}

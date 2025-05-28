@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rezerwacja wizyty – potwierdzenie</title>
+  <!-- Załóżmy, że korzystasz z tego samego pliku CSS, co w innych podstronach -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <a href="/" class="logo-link">
+      <h1>Znajdź lekarza</h1>
+    </a>
+    <div class="auth-links">
+      <a href="/register" class="register">Zarejestruj się</a>
+      <a href="/login" class="login">Zaloguj się</a>
+    </div>
+  </div>
+</header>
+
+<main class="main-content">
+  <section class="hero">
+    <div class="container">
+      <!-- Wyświetlamy komunikat potwierdzający rejestrację wizyty -->
+      <h2>Twoja wizyta została pomyślnie zarezerwowana!</h2>
+      <p>
+        Dziękujemy za skorzystanie z naszego serwisu.
+        <br/>
+        Niedługo otrzymasz maila z potwierdzeniem szczegółów wizyty.
+      </p>
+
+      <!-- Jeśli chcesz, możesz wyświetlić dane wizyty przekazane z backendu.
+           Na przykład (Flask/Jinja2) -->
+      {% if doctorName and date and time %}
+        <div class="appointment-details">
+          <h3>Szczegóły rezerwacji:</h3>
+          <p><strong>Lekarz:</strong> {{ doctorName }}</p>
+          <p><strong>Data:</strong> {{ date }}</p>
+          <p><strong>Godzina:</strong> {{ time }}</p>
+        </div>
+      {% endif %}
+
+      <div style="margin-top: 20px;">
+        <a href="/" class="back-button" style="padding:10px 20px; background-color:#143b60; color:white; text-decoration:none; border-radius:4px;">
+          Powrót do strony głównej
+        </a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <!-- Stopka taka sama jak na innych podstronach, dla spójności -->
+    <div class="footer-columns">
+        <div class="column">
+            <h3>Dla pacjentów</h3>
+            <ul>
+                <li><a href="#">Lekarze</a></li>
+                <li><a href="#">Placówki medyczne</a></li>
+                <li><a href="#">Pytania i odpowiedzi</a></li>
+                <li><a href="#">Usługi i zabiegi</a></li>
+                <li><a href="#">Choroby</a></li>
+                <li><a href="#">Pomoc</a></li>
+                <li><a href="#">Aplikacje mobilne</a></li>
+                <li><a href="#">Blog dla pacjentów</a></li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>O nas</h3>
+            <ul>
+                <li><a href="#">Placówki</a></li>
+                <li><a href="#">Lekarze</a></li>
+                <li><a href="#">Pytania i odpowiedzi</a></li>
+                <li><a href="#">Usługi</a></li>
+                <li><a href="#">Pomoc</a></li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>Dla lekarzy</h3>
+            <ul>
+                <li><a href="#">Praca</a></li>
+                <li><a href="#">Jak się dostać do naszej listy lekarzy</a></li>
+                <li><a href="#">Pytania i odpowiedzi</a></li>
+                <li><a href="#">Usługi</a></li>
+                <li><a href="#">Pomoc</a></li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>Znajdź lekarza</h3>
+            <address>
+                Znajdź lekarza Sp. z o.o.<br />
+                ul. Kamienna 1<br />
+                55-055 Wrocław, Polska<br />
+                NIP: 1111111111<br />
+                KRS: 1111111111<br />
+                REGON: 1111111111
+            </address>
+        </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
